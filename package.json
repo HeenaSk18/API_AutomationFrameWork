@@ -1,0 +1,24 @@
+{
+  "name": "api_automationframework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:users": "playwright test tests/api_tests",
+    "test:posts": "playwright test tests/jsonplaceholder.spec.ts",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "dotenv": "^18.0.9",
+    "typescript": "^7.0.2"
+  }
+}
