@@ -5,7 +5,7 @@ export class PostService {
   constructor(private readonly api: ApiClient) {}
 
   getAll(userId?: number): Promise<APIResponse> {
-    return this.api.get('/posts', userId === undefined ? undefined : { userId });
+    return this.api.get('/posts', userId === undefined ? undefined : { params: { userId } });
   }
 
   getById(id: number): Promise<APIResponse> {

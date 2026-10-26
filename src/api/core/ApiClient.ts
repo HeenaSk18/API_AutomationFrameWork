@@ -1,36 +1,33 @@
-import type { APIRequestContext, APIResponse } from '@playwright/test';
+import { APIRequestContext } from "@playwright/test";
 
+// Call in Playwright - API -> HTTP
 export class ApiClient {
-  constructor(
-    private readonly request: APIRequestContext,
-    private token?: string,
-  ) {}
+  protected request: APIRequestContext;
+  protected baseURL: string;
+  //readonly - properties cannot be changed
+  //NOT having value - NOT having value through my framework
 
-  setToken(token: string): void {
-    this.token = token;
+  constructor(request: APIRequestContext, baseURL: string) {
+    this.request = request;
+    this.baseURL = baseURL;
   }
 
-  private headers(): Record<string, string> {
-    return this.token ? { Authorization: `Bearer ${this.token}` } : {};
-  }
 
-  get(url: string, params?: Record<string, string | number | boolean>): Promise<APIResponse> {
-    return this.request.get(url, { headers: this.headers(), params });
+  async get(
+    endpoint: string,
+    options?: {
+      headers?: Record<string, string>;
+      params?: Record<string, string | number | boolean>;
+    },
+  ) {
+    return this.request.get(`${this.baseURL}${endpoint}`, {
+      headers: options?.headers,
+      params: options?.params,
+    });
   }
-
-  post(url: string, data?: unknown): Promise<APIResponse> {
-    return this.request.post(url, { headers: this.headers(), data });
-  }
-
-  put(url: string, data?: unknown): Promise<APIResponse> {
-    return this.request.put(url, { headers: this.headers(), data });
-  }
-
-  patch(url: string, data?: unknown): Promise<APIResponse> {
-    return this.request.patch(url, { headers: this.headers(), data });
-  }
-
-  delete(url: string): Promise<APIResponse> {
-    return this.request.delete(url, { headers: this.headers() });
+  async post(endpoint: string, data?: Record<string, unknown>) {
+    return this.request.post(`${this.baseURL}${endpoint}`, {
+      data,
+    });
   }
 }

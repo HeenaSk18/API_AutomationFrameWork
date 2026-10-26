@@ -1,48 +1,28 @@
-import { test, expect } from '@api/fixtures/apiFixture';
+import { test, expect } from '../../src/api/fixtures/apiFixture';
+// OR (after alias)
+// import { test, expect } from '@api/fixtures/apiFixture';
 
-test.describe('Users API', () => {
-  test('GET /users returns 10 users with email properties', async ({ userService }) => {
-    const response = await userService.getAll();
-    expect(response.status()).toBe(200);
+test('Validate user profile', async ({ userService }) => {
+  const response = await userService.getProfile();
 
-    const users: Array<{ email?: string }> = await response.json();
-    expect(users).toHaveLength(10);
-    expect(users.every((user) => 'email' in user)).toBe(true);
-  });
+  expect(response.ok()).toBeTruthy();
 
-  test('GET /users/1 returns the expected user', async ({ userService }) => {
-    const response = await userService.getById(1);
-    expect(response.status()).toBe(200);
-    expect(await response.json()).toMatchObject({ id: 1, username: 'Bret' });
-  });
-
-  test('GET /users/9999 returns 404', async ({ userService }) => {
-    const response = await userService.getById(9999);
-    expect(response.status()).toBe(404);
-  });
-
-  test('POST /users creates and returns the user', async ({ userService }) => {
-    const payload = {
-      name: 'Test User',
-      username: 'testuser',
-      email: 'test@example.com',
-    };
-    const response = await userService.create(payload);
-    expect(response.status()).toBe(201);
-
-    const user = await response.json();
-    expect(user).toMatchObject(payload);
-    expect(typeof user.id).toBe('number');
-  });
-
-  test('PUT /users/1 updates the user name', async ({ userService }) => {
-    const response = await userService.update(1, { name: 'Updated User' });
-    expect(response.status()).toBe(200);
-    expect(await response.json()).toMatchObject({ name: 'Updated User' });
-  });
-
-  test('DELETE /users/1 removes the user', async ({ userService }) => {
-    const response = await userService.remove(1);
-    expect(response.status()).toBe(200);
-  });
+  const body = await response.json();
+  expect(body.username).toBe('emilys');
 });
+
+//FIRST LAYER
+//1. core layer - ApiClient.ts
+//click, fill,
+//GET, POST, PUT, DELETE
+
+
+//2. service layer - Token based mechanism
+//API - request -> response - user who has made this request is correct/valid - Token
+//Request- 10 mins, 20 mins - refresh token
+//json.placeholder.typicode.com = free open API
+//AuthService - generate access Token
+//UserService - token with the rest of APIs
+
+//FIXTURE LAYER (apiFixture.ts)
+//TEST LAYER
